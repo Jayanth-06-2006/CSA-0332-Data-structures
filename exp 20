@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main() {
+    int arr[] = {5, 10, 10, 2, 1, 4, 2};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int freq[n];
+    int i, j;
+
+    // Initialize frequency array
+    for (i = 0; i < n; i++) {
+        freq[i] = -1; // Mark all elements as unvisited
+    }
+
+    printf("Repeated elements and their frequencies:\n");
+
+    // Count frequency of each element
+    for (i = 0; i < n; i++) {
+        if (freq[i] == -1) {
+            int count = 1;
+            for (j = i + 1; j < n; j++) {
+                if (arr[i] == arr[j]) {
+                    count++;
+                    freq[j] = 0; // Mark as visited
+                }
+            }
+            if (count > 1) {
+                printf("%d occurs %d times\n", arr[i], count);
+            }
+        }
+    }
+
+    return 0;
+}
