@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main() {
+    int arr[] = {10, 20, 30, 40, 50}; // Sample array
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int key, found = 0;
+
+    printf("Enter the number to search: ");
+    scanf("%d", &key);
+
+    // Linear search
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == key) {
+            printf("Number %d found at index %d.\n", key, i);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Number %d not found in the array.\n", key);
+    }
+
+    return 0;
+}
