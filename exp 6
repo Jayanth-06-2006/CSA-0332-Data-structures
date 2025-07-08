@@ -1,0 +1,94 @@
+#include <stdio.h>
+#define MAX 100
+
+// Insert element at a specific position (0-based)
+int insertElement(int arr[], int size, int element, int pos) {
+    if (size >= MAX || pos < 0 || pos > size) {
+        printf("Insertion error: invalid position or array full.\n");
+        return size;
+    }
+    for (int i = size - 1; i >= pos; i--) {
+        arr[i + 1] = arr[i];
+    }
+    arr[pos] = element;
+    return size + 1;
+}
+
+// Delete first occurrence of 'element'
+int deleteElement(int arr[], int size, int element) {
+    int pos = -1;
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == element) {
+            pos = i;
+            break;
+        }
+    }
+    if (pos == -1) {
+        printf("Deletion error: element %d not found.\n", element);
+        return size;
+    }
+    for (int i = pos; i < size - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    return size - 1;
+}
+
+// Display current array
+void displayArray(int arr[], int size) {
+    if (size == 0) {
+        printf("Array is empty.\n");
+        return;
+    }
+    printf("Array contents: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int arr[MAX], size = 0, choice, element, pos;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Insert\n");
+        printf("2. Delete\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        if (scanf("%d", &choice) != 1) break;
+
+        switch (choice) {
+            case 1:
+                printf("Enter element to insert: ");
+                scanf("%d", &element);
+                printf("Enter position (0 to %d): ", size);
+                scanf("%d", &pos);
+                size = insertElement(arr, size, element, pos);
+                break;
+
+            case 2:
+                if (size == 0) {
+                    printf("Array is empty—cannot delete.\n");
+                } else {
+                    printf("Enter element to delete: ");
+                    scanf("%d", &element);
+                    size = deleteElement(arr, size, element);
+                }
+                break;
+
+            case 3:
+                displayArray(arr, size);
+                break;
+
+            case 4:
+                printf("Exiting.\n");
+                break;
+
+            default:
+                printf("Invalid choice—try again.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
