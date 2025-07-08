@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX 100
+
+// Stack structure
+struct Stack {
+    int items[MAX];
+    int top;
+};
+
+// Function to initialize the stack
+void initStack(struct Stack* s) {
+    s->top = -1;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack* s) {
+    return s->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(struct Stack* s, int value) {
+    if (s->top == MAX - 1) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    s->items[++(s->top)] = value;
+}
+
+// Function to pop an element from the stack
+int pop(struct Stack* s) {
+    if (isEmpty(s)) {
+        printf("Stack Underflow\n");
+        return -1;
+    }
+    return s->items[(s->top)--];
+}
+
+// Function to apply an operator to two operands
+int applyOp(int a, int b, char op) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+        default: return 0;
+    }
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(char* expr) {
+    struct Stack s;
+    initStack(&s);
+    int i = 0;
+    while (expr[i] != '\0') {
+        char c = expr[i];
+        if (isdigit(c)) {
+            push(&s, c - '0'); // Convert char to int
+        } else if (strchr("+-*/", c)) {
+            int b = pop(&s);
+            int a = pop(&s);
+            int result = applyOp(a, b, c);
+            push(&s, result);
+        }
+        i++;
+    }
+    return pop(&s);
+}
+
+int main() {
+    char expr[MAX];
+    printf("Enter a postfix expression: ");
+    fgets(expr, MAX, stdin);
+    int result = evaluatePostfix(expr);
+    printf("Result: %d\n", result);
+    return 0;
+}
