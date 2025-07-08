@@ -1,0 +1,14 @@
+#include <stdio.h>
+
+// Function to input matrix elements
+void getMatrixElements(int matrix[][10], int row, int column) {
+    printf("\nEnter elements:\n");
+    for (int i = 0; i < row; ++i)
+        for (int j = 0; j < column; ++j) {
+            printf("Enter element a%d%d: ", i + 1, j + 1);
+            scanf("%d", &matrix[i][j]);
+        }
+}
+
+// Function to multiply two matrices
+void multiplyMatrices(int first[][10], int second[][10], int result[][10], int r1
