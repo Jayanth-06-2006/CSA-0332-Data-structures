@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a BST node
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Create a new node
+struct Node* newNode(int data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Inorder traversal function to find k-th smallest element
+void inorder(struct Node* root, int* count, int k, int* result) {
+    if (root == NULL || *count >= k)
+        return;
+
+    // Traverse the left subtree
+    inorder(root->left, count, k, result);
+
+    // Increment the count
+    (*count)++;
+
+    // If count equals k, store the result
+    if (*count == k)
+        *result = root->data;
+
+    // Traverse the right subtree
+    inorder(root->right, count, k, result);
+}
+
+// Function to find the k-th smallest element
+int kthSmallest(struct Node* root, int k) {
+    int count = 0;
+    int result = -1;
+    inorder(root, &count, k, &result);
+    return result;
+}
+
+int main() {
+    // Create the BST
+    struct Node* root = newNode(20);
+    root->left = newNode(8);
+    root->right = newNode(22);
+    root->left->left = newNode(4);
+    root->left->right = newNode(12);
+    root->left->right->left = newNode(10);
+    root->left->right->right = newNode(14);
+
+    int k = 3;
+    int result = kthSmallest(root, k);
+    if (result != -1)
+        printf("The %d-th smallest element is %d\n", k, result);
+    else
+        printf("The tree has fewer than %d elements\n", k);
+
+    return 0;
+}
