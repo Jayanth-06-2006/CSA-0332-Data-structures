@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 100
+
+int graph[MAX_VERTICES][MAX_VERTICES];
+int visited[MAX_VERTICES];
+int queue[MAX_VERTICES];
+int front = -1, rear = -1;
+
+void enqueue(int vertex) {
+    if (rear == MAX_VERTICES - 1)
+        printf("\nQueue Overflow");
+    else
+        queue[++rear] = vertex;
+}
+
+int dequeue() {
+    if (front == rear)
+        printf("\nQueue Underflow");
+    else
+        return queue[++front];
+    return -1;
+}
+
+void bfs(int startVertex, int n) {
+    enqueue(startVertex);
+    visited[startVertex] = 1;
+
+    while (front != rear) {
+        int currentVertex = dequeue();
+        printf("%d ", currentVertex);
+
+        for (int i = 0; i < n; i++) {
+            if (graph[currentVertex][i] == 1 && !visited[i]) {
+                enqueue(i);
+                visited[i] = 1;
+            }
+        }
+    }
+}
+
+int main() {
+    int n, startVertex;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter the adjacency matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        visited[i] = 0;
+    }
+
+    printf("Enter the starting vertex: ");
+    scanf("%d", &startVertex);
+
+    printf("Breadth First Search starting from vertex %d:\n", startVertex);
+    bfs(startVertex, n);
+
+    return 0;
+}
