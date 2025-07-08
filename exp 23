@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Comparison function for qsort
+int compare(const void *a, const void *b) {
+    return (*(char *)a - *(char *)b);
+}
+
+// Function to sort the string
+void sortString(char *str) {
+    int n = strlen(str);
+    qsort(str, n, sizeof(char), compare);
+    printf("Sorted string: %s\n", str);
+}
+
+int main() {
+    char str[100];
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';  // Remove trailing newline character
+
+    sortString(str);
+    return 0;
+}
