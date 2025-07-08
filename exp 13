@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX 50
+
+// Stack structure
+struct Stack {
+    int items[MAX];
+    int top;
+};
+
+// Function to initialize the stack
+void initStack(struct Stack* s) {
+    s->top = -1;
+}
+
+// Function to check if the stack is full
+int isFull(struct Stack* s) {
+    return s->top == MAX - 1;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack* s) {
+    return s->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(struct Stack* s, int value) {
+    if (isFull(s)) {
+        printf("Stack Overflow!\n");
+        return;
+    }
+    s->items[++(s->top)] = value;
+}
+
+// Function to pop an element from the stack
+int pop(struct Stack* s) {
+    if (isEmpty(s)) {
+        printf("Stack Underflow!\n");
+        return -1;
+    }
+    return s->items[(s->top)--];
+}
+
+// Function to peek the top element of the stack
+int peek(struct Stack* s) {
+    if (isEmpty(s)) {
+        printf("Stack is empty!\n");
+        return -1;
+    }
+    return s->items[s->top];
+}
+
+// Function to get precedence of operators
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+// Function to perform arithmetic operations
+int applyOp(int a, int b, char op) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+        default: return 0;
+    }
+}
+
+// Function to convert infix expression to postfix
+void infixToPostfix(char* infix, char* postfix) {
+    struct Stack s;
+    initStack(&s);
+    int j = 0;
+
+    for (int i = 0; infix[i]; i++) {
+        char c = infix[i];
+
+        if (isalnum(c)) {
+            postfix[j++] = c;
+        } else if (c == '(') {
+            push(&s, c);
+        } else if (c == ')') {
+            while (!isEmpty(&s) && peek(&s) != '(') {
+                postfix[j++] = pop(&s);
+            }
+            pop(&s); // Remove '('
+        } else if (strchr("+-*/", c)) {
+            while (!isEmpty(&s) && precedence(peek(&s)) >= precedence(c)) {
+                postfix[j++] = pop(&s);
+            }
+            push(&s, c);
+        }
+    }
+
+    while (!isEmpty(&s)) {
+        postfix[j++] = pop(&s);
+    }
+    postfix[j] = '\0';
+}
+
+// Function to evaluate postfix expression
+int evaluatePostfix(char* postfix) {
+    struct Stack s;
+    initStack(&s);
+
+    for (int i = 0; postfix[i]; i++) {
+        char c = postfix[i];
+
+        if (isdigit(c)) {
+            push(&s, c - '0');
+        } else if (strchr("+-*/", c)) {
+            int b = pop(&s);
+            int a = pop(&s);
+            int result = applyOp(a, b, c);
+            push(&s, result);
+        }
+    }
+
+    return pop(&s);
+}
+
+int main() {
+    char infix[MAX], postfix[MAX];
+
+    printf("Enter infix expression: ");
+    fgets(infix, MAX, stdin);
+
+    infixToPostfix(infix, postfix);
+    printf("Postfix expression: %s\n", postfix);
+
+    int result = evaluatePostfix(postfix);
+    printf("Evaluation result: %d\n", result);
+
+    return 0;
+}
